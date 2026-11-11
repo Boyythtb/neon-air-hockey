@@ -59,11 +59,25 @@
         </div>
       </div>
 
-      <!-- 2. GIAO DIỆN CHÍNH (MAIN MENU BIRDIE BASH STYLE) -->
+      <!-- 2. GIAO DIỆN CHÍNH (MAIN MENU TBOY STYLE) -->
       <div id="main-menu" class="tboy-menu">
-        <!-- CỘT TRÁI -->
-        <div class="bb-left-column">
+        <!-- THANH TOP BAR CÂN ĐỐI 2 BÊN -->
+        <div class="tboy-top-bar">
+          <button class="bb-tips-pill" id="btn-toggle-tips">
+            <span>💡</span>
+            <span class="tips-pill-text">Mẹo Thi Đấu</span>
+          </button>
+          <button class="bb-signin-pill" id="btn-change-name">
+            <span class="user-icon">👤</span>
+            <span id="display-player-name">Cơ Thủ #1024</span>
+            <span class="edit-icon">✏️</span>
+          </button>
+        </div>
+
+        <!-- KHỐI TRUNG TÂM: LOGO & BUTTONS CHÍNH -->
+        <div class="bb-center-content">
           <div class="bb-brand-box">
+            <div class="bb-badge-studio">TBOY STUDIO 3D</div>
             <div class="bb-logo-group">
               <span class="bb-logo-hockey">AIR</span>
               <span class="bb-logo-strike">HOCKEY</span>
@@ -73,49 +87,50 @@
 
           <div class="bb-menu-stack">
             <button class="bb-pill-btn primary" id="btn-play-ai">
-              <span>🤖</span> Đấu Với Máy (AI)
+              <span class="btn-icon">🤖</span>
+              <span class="btn-text">Đấu Với Máy (AI)</span>
+              <span class="btn-tag">Solo</span>
             </button>
             <button class="bb-pill-btn cyan" id="btn-open-create-room">
-              <span>⚡</span> Tạo Phòng Online (1v1)
+              <span class="btn-icon">⚡</span>
+              <span class="btn-text">Tạo Phòng Online</span>
+              <span class="btn-tag cyan">1v1 Realtime</span>
             </button>
-            <button class="bb-pill-btn" id="btn-open-join-room">
-              <span>🔑</span> Vào Phòng Bằng Mã
+            <button class="bb-pill-btn light" id="btn-open-join-room">
+              <span class="btn-icon">🔑</span>
+              <span class="btn-text">Vào Phòng Bằng Mã</span>
             </button>
           </div>
         </div>
 
-        <!-- TOP RIGHT BAR -->
-        <div class="bb-top-bar-right">
-          <button class="bb-signin-pill" id="btn-change-name">
-            <span class="user-icon">👤</span>
-            <span id="display-player-name">Cơ Thủ #1024</span>
-            <span style="font-size: 11px; color: #f43f5e;">✏️</span>
-          </button>
-        </div>
-
-        <!-- BẢNG MẸO THI ĐẤU (MẶC ĐỊNH THU GỌN GỌN GÀNG, BẤM VÀO MỚI MỞ RA) -->
-        <div class="bb-right-column">
-          <div class="bb-card collapsed" id="card-tips">
-            <div class="bb-card-header" id="btn-toggle-tips">
-              <div class="bb-card-title">
-                <span>💡</span> MẸO THI ĐẤU
+        <!-- MODAL POPUP MẸO THI ĐẤU (KHÔNG BỊ ĐÈ NỘI DUNG) -->
+        <div id="modal-tips" class="tboy-modal-overlay hidden">
+          <div class="tboy-dialog tips-dialog">
+            <div class="tips-dialog-header">
+              <div class="tboy-dialog-title" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                <span>💡</span> BÍ KÍP THI ĐẤU
               </div>
-              <button class="bb-toggle-btn" id="btn-toggle-tips-icon" title="Mở rộng / Thu gọn">▸</button>
+              <button class="tips-close-btn" id="btn-close-tips" title="Đóng">✕</button>
             </div>
-            <div class="bb-tip-content" id="tips-content">
+            <div class="bb-tip-content">
               <div class="bb-tip-item">
-                <span>🎯</span>
-                <span>Rê chuột nhẹ để đẩy êm, <b>vụt chuột nhanh</b> để smash nã đại bác xé gió!</span>
+                <span class="tip-icon">🎯</span>
+                <span>Rê chuột / vuốt nhẹ để khống chế bóng, <b>vút thật nhanh</b> để smash nã đại bác xé gió!</span>
               </div>
               <div class="bb-tip-item">
-                <span>📐</span>
-                <span>Đánh đĩa nảy vào thành chữ V để tạo góc sút hiểm hóc qua gôn.</span>
+                <span class="tip-icon">📐</span>
+                <span>Sút đĩa nảy vào thành bàn chữ V để tạo đường bóng chéo hiểm hóc qua gôn.</span>
               </div>
               <div class="bb-tip-item">
-                <span>🏆</span>
-                <span>Cơ thủ nào chạm mốc <b>7 điểm</b> trước sẽ giành chiến thắng!</span>
+                <span class="tip-icon">🛡️</span>
+                <span>Luôn giữ tay cầm ở khu vực trung lộ trước khung thành để cản phá các pha phản xạ.</span>
+              </div>
+              <div class="bb-tip-item">
+                <span class="tip-icon">🏆</span>
+                <span>Cơ thủ nào chạm mốc <b>7 điểm</b> trước sẽ giành cúp chiến thắng chung cuộc!</span>
               </div>
             </div>
+            <button class="bb-pill-btn primary" id="btn-tips-ok" style="justify-content: center; margin-top: 6px;">Đã Hiểu, Chiến Thôi!</button>
           </div>
         </div>
       </div>

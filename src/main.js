@@ -42,8 +42,6 @@ scene.fog = new THREE.FogExp2(0xfdf2f8, 0.006);
 
 // CAMERA ISOMETRIC 3D CHUẨN BIRDIE BASH
 const camera = new THREE.PerspectiveCamera(46, window.innerWidth / window.innerHeight, 0.1, 150);
-camera.position.set(0, 28, 24);
-camera.lookAt(0, 0, 1);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -53,6 +51,36 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.15;
 container.appendChild(renderer.domElement);
+
+// HÀM ĐIỀU CHỈNH CAMERA THÔNG MINH CHO TỪNG THIẾT BỊ (MOBILE / TABLET / DESKTOP)
+export function updateCameraFraming() {
+  const aspect = window.innerWidth / window.innerHeight;
+  camera.aspect = aspect;
+
+  const camY = 46;
+  const camZ = 32;
+  const baseFov = 48;
+
+  // Với màn hình dọc hẹp (điện thoại mobile portrait / cửa sổ hẹp), FOV tự động giãn nở linh hoạt
+  // để toàn bộ chiều ngang bàn đấu (18m + thành bàn) và 2 đầu gôn luôn hiển thị trọn vẹn 100%
+  let fov = baseFov;
+  if (aspect < 0.82) {
+    fov = Math.max(baseFov, 2 * Math.atan(0.245 / aspect) * (180 / Math.PI));
+  }
+  camera.fov = fov;
+
+  if (myRole === 'p1') {
+    camera.position.set(0, camY, camZ);
+    camera.lookAt(0, 0, 0);
+  } else {
+    camera.position.set(0, camY, -camZ);
+    camera.lookAt(0, 0, 0);
+  }
+
+  camera.updateProjectionMatrix();
+  if (renderer) renderer.setSize(window.innerWidth, window.innerHeight);
+}
+updateCameraFraming();
 
 // HỆ THỐNG CHIẾU SÁNG ẤM ÁP TỰ NHIÊN
 const hemiLight = new THREE.HemisphereLight(0xfffbeb, 0xfce7f3, 1.35);
@@ -215,6 +243,11 @@ function onPointerMove(e) {
 }
 
 window.addEventListener('mousemove', onPointerMove);
+window.addEventListener('touchstart', (e) => {
+  if (e.touches.length > 0) {
+    onPointerMove(e.touches[0]);
+  }
+}, { passive: false });
 window.addEventListener('touchmove', (e) => {
   if (e.touches.length > 0) {
     onPointerMove(e.touches[0]);
@@ -456,10 +489,10 @@ function resetMatch() {
 
 function backToMenu() {
   gameMode = 'MENU';
+  myRole = 'p1';
   document.getElementById('hud').classList.add('hidden');
   document.getElementById('main-menu').classList.remove('hidden');
-  camera.position.set(0, 28, 24);
-  camera.lookAt(0, 0, 1);
+  updateCameraFraming();
   fbMultiplayer.leaveRoom();
 }
 
@@ -520,6 +553,7 @@ document.getElementById('btn-play-ai').addEventListener('click', () => {
   sounds.playClick();
   gameMode = 'AI';
   myRole = 'p1';
+  updateCameraFraming();
   document.getElementById('main-menu').classList.add('hidden');
   document.getElementById('hud').classList.remove('hidden');
   document.getElementById('hud-p1-name').innerText = playerName.toUpperCase();
@@ -534,6 +568,7 @@ document.getElementById('btn-open-create-room').addEventListener('click', async 
     const res = await fbMultiplayer.createRoom(playerName);
     roomCode = res.roomCode;
     myRole = 'p1';
+    updateCameraFraming();
     document.getElementById('label-room-code').innerText = roomCode;
     document.getElementById('modal-create-room').classList.remove('hidden');
     document.getElementById('main-menu').classList.add('hidden');
@@ -572,8 +607,7 @@ document.getElementById('btn-confirm-join').addEventListener('click', async () =
     const res = await fbMultiplayer.joinRoom(code, playerName);
     roomCode = res.roomCode;
     myRole = 'p2';
-    camera.position.set(0, 28, -24);
-    camera.lookAt(0, 0, -1);
+    updateCameraFraming();
     document.getElementById('modal-join-room').classList.add('hidden');
     document.getElementById('main-menu').classList.add('hidden');
     document.getElementById('hud').classList.remove('hidden');
@@ -600,16 +634,37 @@ document.getElementById('btn-change-name').addEventListener('click', () => {
   }
 });
 
-// THU GỌN / MỞ RỘNG BẢNG MẸO THI ĐẤU
-const tipsCard = document.getElementById('card-tips');
+// POPUP MẸO THI ĐẤU
+const modalTips = document.getElementById('modal-tips');
 const btnToggleTips = document.getElementById('btn-toggle-tips');
-const iconToggleTips = document.getElementById('btn-toggle-tips-icon');
+const btnCloseTips = document.getElementById('btn-close-tips');
+const btnTipsOk = document.getElementById('btn-tips-ok');
 
-btnToggleTips.addEventListener('click', () => {
-  sounds.playClick();
-  const isCollapsed = tipsCard.classList.toggle('collapsed');
-  iconToggleTips.innerText = isCollapsed ? '▸' : '▾';
-});
+if (btnToggleTips && modalTips) {
+  btnToggleTips.addEventListener('click', () => {
+    sounds.playClick();
+    modalTips.classList.remove('hidden');
+  });
+}
+if (btnCloseTips && modalTips) {
+  btnCloseTips.addEventListener('click', () => {
+    sounds.playClick();
+    modalTips.classList.add('hidden');
+  });
+}
+if (btnTipsOk && modalTips) {
+  btnTipsOk.addEventListener('click', () => {
+    sounds.playClick();
+    modalTips.classList.add('hidden');
+  });
+}
+if (modalTips) {
+  modalTips.addEventListener('click', (e) => {
+    if (e.target === modalTips) {
+      modalTips.classList.add('hidden');
+    }
+  });
+}
 
 // SPLASH LOADING
 window.addEventListener('load', () => {
@@ -667,9 +722,7 @@ function animate() {
 }
 animate();
 
-// RESIZE HANDLER
+// RESIZE HANDLER TỰ ĐỘNG CẬP NHẬT GÓC NHÌN CHUẨN MỌI THIẾT BỊ
 window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  updateCameraFraming();
 });
