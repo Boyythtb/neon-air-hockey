@@ -7,6 +7,19 @@
     <meta name="description" content="Tranh tài Air Hockey 3D siêu tốc đỉnh cao cùng Tboy Studio. Solo với AI Pro & Đấu mạng Realtime qua mã phòng!" />
     <meta name="theme-color" content="#fdf2f8" />
 
+    <!-- Chống Cache Trình Duyệt / Webview (Luôn load bản mới nhất) -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <script>
+      // Xóa cache cũ nếu trình duyệt lưu cache PWA/Webview
+      const V = '2.2.0';
+      if (localStorage.getItem('tboy_v') !== V) {
+        localStorage.setItem('tboy_v', V);
+        if ('caches' in window) caches.keys().then(k => k.forEach(n => caches.delete(n)));
+      }
+    </script>
+
     <!-- Favicons -->
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -74,32 +87,34 @@
           </button>
         </div>
 
-        <!-- KHỐI TRUNG TÂM: LOGO & BUTTONS CHÍNH -->
+        <!-- KHỐI TRUNG TÂM: CARD KÍNH LIQUID GLASS CAO CẤP -->
         <div class="bb-center-content">
-          <div class="bb-brand-box">
-            <div class="bb-badge-studio">TBOY STUDIO 3D</div>
-            <div class="bb-logo-group">
-              <span class="bb-logo-hockey">AIR</span>
-              <span class="bb-logo-strike">HOCKEY</span>
+          <div class="bb-glass-card">
+            <div class="bb-brand-box">
+              <div class="bb-badge-studio">✨ TBOY STUDIO · AIR HOCKEY 3D</div>
+              <div class="bb-logo-group">
+                <span class="bb-logo-hockey">AIR</span>
+                <span class="bb-logo-strike">HOCKEY</span>
+              </div>
+              <span class="bb-sub-pill">⚡ Tranh Tài Đối Kháng Siêu Tốc 3D</span>
             </div>
-            <span class="bb-sub-pill">🥏 Tranh Tài Đối Kháng Tốc Độ Cao 3D</span>
-          </div>
 
-          <div class="bb-menu-stack">
-            <button class="bb-pill-btn primary" id="btn-play-ai">
-              <span class="btn-icon">🤖</span>
-              <span class="btn-text">Đấu Với Máy (AI)</span>
-              <span class="btn-tag">Solo</span>
-            </button>
-            <button class="bb-pill-btn cyan" id="btn-open-create-room">
-              <span class="btn-icon">⚡</span>
-              <span class="btn-text">Tạo Phòng Online</span>
-              <span class="btn-tag cyan">1v1 Realtime</span>
-            </button>
-            <button class="bb-pill-btn light" id="btn-open-join-room">
-              <span class="btn-icon">🔑</span>
-              <span class="btn-text">Vào Phòng Bằng Mã</span>
-            </button>
+            <div class="bb-menu-stack">
+              <button class="bb-pill-btn primary" id="btn-play-ai">
+                <span class="btn-icon">🤖</span>
+                <span class="btn-text">Đấu Với Máy (AI)</span>
+                <span class="btn-tag">Solo</span>
+              </button>
+              <button class="bb-pill-btn cyan" id="btn-open-create-room">
+                <span class="btn-icon">⚡</span>
+                <span class="btn-text">Tạo Phòng Online</span>
+                <span class="btn-tag cyan">1v1 Realtime</span>
+              </button>
+              <button class="bb-pill-btn light" id="btn-open-join-room">
+                <span class="btn-icon">🔑</span>
+                <span class="btn-text">Vào Phòng Bằng Mã</span>
+              </button>
+            </div>
           </div>
         </div>
 
