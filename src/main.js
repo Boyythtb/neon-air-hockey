@@ -57,24 +57,40 @@ export function updateCameraFraming() {
   const aspect = window.innerWidth / window.innerHeight;
   camera.aspect = aspect;
 
-  const camY = 46;
-  const camZ = 32;
-  const baseFov = 48;
+  let camY = 44;
+  let camZ = 24;
+  let lookZ = 0;
+  let fov = 44;
 
-  // Với màn hình dọc hẹp (điện thoại mobile portrait / cửa sổ hẹp), FOV tự động giãn nở linh hoạt
-  // để toàn bộ chiều ngang bàn đấu (18m + thành bàn) và 2 đầu gôn luôn hiển thị trọn vẹn 100%
-  let fov = baseFov;
-  if (aspect < 0.82) {
-    fov = Math.max(baseFov, 2 * Math.atan(0.245 / aspect) * (180 / Math.PI));
+  if (aspect < 0.65) {
+    // MÀN HÌNH DI ĐỘNG DỌC (PORTRAIT SMARTPHONE: iPhone, Android)
+    // Sàn đấu Air Hockey căng tràn full 100% màn hình, không còn viền thừa 2 bên!
+    camY = 40;
+    camZ = 11;
+    lookZ = 0.5;
+    fov = Math.max(46, 2 * Math.atan(0.235 / aspect) * (180 / Math.PI));
+  } else if (aspect < 1.05) {
+    // TABLET / IPAD
+    camY = 42;
+    camZ = 18;
+    lookZ = 0.3;
+    fov = 48;
+  } else {
+    // DESKTOP / PC
+    camY = 44;
+    camZ = 24;
+    lookZ = 0;
+    fov = 44;
   }
+
   camera.fov = fov;
 
   if (myRole === 'p1') {
     camera.position.set(0, camY, camZ);
-    camera.lookAt(0, 0, 0);
+    camera.lookAt(0, 0, lookZ);
   } else {
     camera.position.set(0, camY, -camZ);
-    camera.lookAt(0, 0, 0);
+    camera.lookAt(0, 0, -lookZ);
   }
 
   camera.updateProjectionMatrix();

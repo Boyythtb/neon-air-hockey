@@ -13,7 +13,7 @@
     <meta http-equiv="Expires" content="0" />
     <script>
       // Xóa cache cũ nếu trình duyệt lưu cache PWA/Webview
-      const V = '2.2.0';
+      const V = '2.3.0';
       if (localStorage.getItem('tboy_v') !== V) {
         localStorage.setItem('tboy_v', V);
         if ('caches' in window) caches.keys().then(k => k.forEach(n => caches.delete(n)));
