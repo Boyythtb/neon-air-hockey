@@ -57,13 +57,13 @@
       <!-- 3D WebGL Canvas Container -->
       <div id="canvas-container"></div>
 
-      <!-- 1. MÀN HÌNH TẢI GAME (SPLASH LOADING BIRDIE BASH STYLE) -->
+      <!-- 1. MÀN HÌNH TẢI GAME (SPLASH LOADING CHUẨN BIRDIE BASH STYLE) -->
       <div id="loading-screen" class="loading-screen">
         <div class="loading-box">
           <span class="loading-puck-bounce">🥏</span>
           <div class="tboy-loading-brand">
             <span class="tboy-studio-badge">TBOY STUDIO</span>
-            <h2 class="loading-brand">Air <span>Hockey 3D</span></h2>
+            <h2 class="loading-brand">Tboy <span>Air Hockey 3D</span></h2>
           </div>
           <div class="loading-track">
             <div id="loading-bar-inner" class="loading-fill"></div>
@@ -72,88 +72,50 @@
         </div>
       </div>
 
-      <!-- 2. GIAO DIỆN CHÍNH (MAIN MENU TBOY STYLE) -->
+      <!-- 2. TRANG CHỜ LOBBY (MAIN MENU CHUẨN FORM BIRDIE BASH & RAGDOLL ARENA) -->
       <div id="main-menu" class="tboy-menu">
-        <!-- THANH TOP BAR CÂN ĐỐI 2 BÊN -->
-        <div class="tboy-top-bar">
-          <button class="bb-tips-pill" id="btn-toggle-tips">
-            <span>💡</span>
-            <span class="tips-pill-text">Mẹo Thi Đấu</span>
-          </button>
-          <button class="bb-signin-pill" id="btn-change-name">
+        <!-- CỘT TRÁI: LOGO THƯƠNG HIỆU & DANH SÁCH CHẾ ĐỘ THI ĐẤU -->
+        <div class="bb-left-column">
+          <div class="bb-brand-box">
+            <div class="tboy-studio-badge">✨ TBOY STUDIO PRESENTS ✨</div>
+            <div class="bb-logo-group">
+              <h1 class="bb-logo-tboy">Tboy</h1>
+              <h1 class="bb-logo-hockey">Air Hockey</h1>
+            </div>
+            <div class="bb-sub-pill">🥏 Tranh tài đối kháng tốc độ cao 3D</div>
+          </div>
+
+          <div class="bb-menu-stack">
+            <button id="btn-play-ai" class="bb-pill-btn active">
+              <span>🤖 Đấu Với Máy (AI)</span>
+            </button>
+            <button id="btn-menu-online" class="bb-pill-btn">
+              <span>🌐 Đấu Mạng Online</span>
+            </button>
+            <button id="btn-toggle-tips" class="bb-pill-btn">
+              <span>📖 Hướng Dẫn Chơi</span>
+            </button>
+            <button id="btn-toggle-audio" class="bb-pill-btn">
+              <span id="txt-audio-btn">🔊 Âm Thanh: Bật</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- GÓC TRÊN BÊN PHẢI: NÚT INFO & TÊN NGƯỜI CHƠI -->
+        <div class="bb-top-bar-right">
+          <button class="bb-circle-btn pink" id="btn-bb-info" title="Giới thiệu game">!</button>
+          <button class="bb-signin-pill" id="btn-change-name" title="Bấm để đổi tên cơ thủ">
             <span class="user-icon">👤</span>
             <span id="display-player-name">Cơ Thủ #1024</span>
-            <span class="edit-icon">✏️</span>
+            <span class="edit-badge">✏️</span>
           </button>
-        </div>
-
-        <!-- KHỐI TRUNG TÂM: CARD KÍNH LIQUID GLASS CAO CẤP -->
-        <div class="bb-center-content">
-          <div class="bb-glass-card">
-            <div class="bb-brand-box">
-              <div class="bb-badge-studio">✨ TBOY STUDIO · AIR HOCKEY 3D</div>
-              <div class="bb-logo-group">
-                <span class="bb-logo-hockey">AIR</span>
-                <span class="bb-logo-strike">HOCKEY</span>
-              </div>
-              <span class="bb-sub-pill">⚡ Tranh Tài Đối Kháng Siêu Tốc 3D</span>
-            </div>
-
-            <div class="bb-menu-stack">
-              <button class="bb-pill-btn primary" id="btn-play-ai">
-                <span class="btn-icon">🤖</span>
-                <span class="btn-text">Đấu Với Máy (AI)</span>
-                <span class="btn-tag">Solo</span>
-              </button>
-              <button class="bb-pill-btn cyan" id="btn-open-create-room">
-                <span class="btn-icon">⚡</span>
-                <span class="btn-text">Tạo Phòng Online</span>
-                <span class="btn-tag cyan">1v1 Realtime</span>
-              </button>
-              <button class="bb-pill-btn light" id="btn-open-join-room">
-                <span class="btn-icon">🔑</span>
-                <span class="btn-text">Vào Phòng Bằng Mã</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- MODAL POPUP MẸO THI ĐẤU (KHÔNG BỊ ĐÈ NỘI DUNG) -->
-        <div id="modal-tips" class="tboy-modal-overlay hidden">
-          <div class="tboy-dialog tips-dialog">
-            <div class="tips-dialog-header">
-              <div class="tboy-dialog-title" style="margin: 0; display: flex; align-items: center; gap: 8px;">
-                <span>💡</span> BÍ KÍP THI ĐẤU
-              </div>
-              <button class="tips-close-btn" id="btn-close-tips" title="Đóng">✕</button>
-            </div>
-            <div class="bb-tip-content">
-              <div class="bb-tip-item">
-                <span class="tip-icon">🎯</span>
-                <span>Rê chuột / vuốt nhẹ để khống chế bóng, <b>vút thật nhanh</b> để smash nã đại bác xé gió!</span>
-              </div>
-              <div class="bb-tip-item">
-                <span class="tip-icon">📐</span>
-                <span>Sút đĩa nảy vào thành bàn chữ V để tạo đường bóng chéo hiểm hóc qua gôn.</span>
-              </div>
-              <div class="bb-tip-item">
-                <span class="tip-icon">🛡️</span>
-                <span>Luôn giữ tay cầm ở khu vực trung lộ trước khung thành để cản phá các pha phản xạ.</span>
-              </div>
-              <div class="bb-tip-item">
-                <span class="tip-icon">🏆</span>
-                <span>Cơ thủ nào chạm mốc <b>7 điểm</b> trước sẽ giành cúp chiến thắng chung cuộc!</span>
-              </div>
-            </div>
-            <button class="bb-pill-btn primary" id="btn-tips-ok" style="justify-content: center; margin-top: 6px;">Đã Hiểu, Chiến Thôi!</button>
-          </div>
         </div>
       </div>
 
-      <!-- 3. HUD MATCH SCOREBOARD CHÍNH GIỮA (SCOREBOARD CHUẨN ĐỒNG BỘ BIRDIE BASH) -->
+      <!-- 3. GIAO DIỆN TRONG TRẬN ĐẤU: HUD SCOREBOARD CHUẨN ĐỒNG BỘ 100% BIRDIE BASH -->
       <div id="hud" class="hud-top-bar hidden">
         <div class="match-hud-pill">
-          <!-- ĐỘI BẠN (P1) -->
+          <!-- NGƯỜI CHƠI P1 (BẠN) -->
           <div class="hud-player">
             <div class="hud-avatar-box">🥏</div>
             <div class="hud-name-col">
@@ -163,25 +125,39 @@
             <span id="p1-score" class="hud-score hud-score-p1">0</span>
           </div>
 
-          <!-- KHỐI GIỮA: VS & TARGET -->
+          <!-- KHỐI GIỮA: VS & MỤC TIÊU ĐIỂM -->
           <div class="hud-center">
             <span class="hud-vs">VS</span>
             <span class="hud-target">CHẠM 7 ĐIỂM</span>
           </div>
 
-          <!-- ĐỐI THỦ (P2) -->
+          <!-- ĐỐI THỦ P2 (AI HOẶC BẠN BÈ) -->
           <div class="hud-player">
             <span id="p2-score" class="hud-score hud-score-p2">0</span>
-            <div class="hud-name-col" style="text-align: right;">
+            <div class="hud-name-col align-right">
               <span id="hud-p2-name" class="hud-label">AI PRO</span>
               <span class="hud-team-tag red">P2</span>
             </div>
             <div class="hud-avatar-box">🤖</div>
           </div>
 
-          <!-- NÚT THOÁT RA MENU -->
-          <button class="hud-exit-btn" id="btn-exit-match" title="Thoát ra Menu">✕</button>
+          <div class="hud-pill-divider"></div>
+
+          <!-- ICON CỬA SỔ THOÁT RA VỀ TRANG CHỜ CHUẨN SVG BIRDIE BASH -->
+          <button id="btn-exit-match" class="hud-pill-exit-btn" title="Thoát về Trang chờ" aria-label="Thoát trận">
+            <svg class="exit-window-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+              <polyline points="10 17 15 12 10 7"></polyline>
+              <line x1="15" y1="12" x2="3" y2="12"></line>
+            </svg>
+          </button>
         </div>
+      </div>
+
+      <!-- HƯỚNG DẪN THAO TÁC NỔI TRONG TRẬN ĐẤU -->
+      <div id="in-game-hint" class="in-game-hint-pill hidden">
+        <span>🖱️ <b>Rê Chuột / Vuốt Màn Hình:</b> Di chuyển tay cầm</span> ·
+        <span><b>Vút nhanh:</b> Smash nã đại bác 💥</span>
       </div>
 
       <!-- BANNER GHI BÀN TO GIỮA MÀN HÌNH -->
@@ -189,14 +165,55 @@
         <span>⚽</span> GOAL!
       </div>
 
-      <!-- 4. MODAL ONLINE LOBBY: TẠO PHÒNG -->
+      <!-- MODAL KẾT THÚC TRẬN ĐẤU (GAME OVER POPUP) -->
+      <div id="modal-game-over" class="tboy-modal-overlay hidden">
+        <div class="tboy-dialog game-over-dialog">
+          <div class="game-over-icon" id="go-icon">🏆</div>
+          <div class="tboy-dialog-title" id="go-title">CHIẾN THẮNG TUYỆT ĐỐI!</div>
+          <div class="tboy-dialog-sub" id="go-sub">Bạn đã xuất sắc vượt qua đối thủ</div>
+          <div class="go-score-box">
+            <span id="go-score-p1" class="go-score blue">7</span>
+            <span class="go-score-divider">-</span>
+            <span id="go-score-p2" class="go-score red">3</span>
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <button class="bb-pill-btn active" id="btn-go-rematch" style="flex: 1; justify-content: center;">
+              <span>🔄 Đấu Lại</span>
+            </button>
+            <button class="bb-pill-btn" id="btn-go-home" style="flex: 1; justify-content: center;">
+              <span>🏠 Trang Chờ</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL CHỌN ĐẤU MẠNG ONLINE -->
+      <div id="modal-online-menu" class="tboy-modal-overlay hidden">
+        <div class="tboy-dialog">
+          <div class="tips-dialog-header">
+            <div class="tboy-dialog-title">🌐 ĐẤU MẠNG ONLINE (1v1)</div>
+            <button class="tips-close-btn" id="btn-close-online-menu">✕</button>
+          </div>
+          <div class="tboy-dialog-sub">Kết nối Realtime qua Firebase · Tranh tài cùng bạn bè siêu tốc!</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 6px;">
+            <button class="bb-pill-btn active" id="btn-open-create-room" style="justify-content: center;">
+              <span>⚡ Tạo Phòng Mới (Nhận Mã PIN)</span>
+            </button>
+            <button class="bb-pill-btn cyan" id="btn-open-join-room" style="justify-content: center;">
+              <span>🔑 Nhập Mã Vào Phòng Bạn Bè</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL ONLINE LOBBY: TẠO PHÒNG -->
       <div id="modal-create-room" class="tboy-modal-overlay hidden">
         <div class="tboy-dialog">
           <div class="tboy-dialog-title">TẠO PHÒNG REALTIME</div>
           <div class="tboy-dialog-sub">Gửi mã phòng này cho bạn bè để cùng vào thi đấu:</div>
           <div class="tboy-code-tag" id="label-room-code">----</div>
-          <div style="font-size: 13px; color: #0284c7; font-weight: 700;">Đang chờ đối thủ vào phòng...</div>
-          <button class="bb-pill-btn" id="btn-cancel-create" style="justify-content: center;">Hủy Phòng</button>
+          <div style="font-size: 13.5px; color: #0284c7; font-weight: 750;">Đang chờ đối thủ vào sân...</div>
+          <button class="bb-pill-btn" id="btn-cancel-create" style="justify-content: center; margin-top: 6px;">Hủy Phòng</button>
         </div>
       </div>
 
@@ -211,8 +228,55 @@
           </div>
           <div style="display: flex; gap: 10px; margin-top: 6px;">
             <button class="bb-pill-btn" id="btn-cancel-join" style="flex: 1; justify-content: center;">Hủy</button>
-            <button class="bb-pill-btn primary" id="btn-confirm-join" style="flex: 1; justify-content: center;">Vào Chiến</button>
+            <button class="bb-pill-btn active" id="btn-confirm-join" style="flex: 1; justify-content: center;">Vào Chiến</button>
           </div>
+        </div>
+      </div>
+
+      <!-- MODAL HƯỚNG DẪN CHƠI -->
+      <div id="modal-tips" class="tboy-modal-overlay hidden">
+        <div class="tboy-dialog tips-dialog">
+          <div class="tips-dialog-header">
+            <div class="tboy-dialog-title">📖 HƯỚNG DẪN THI ĐẤU</div>
+            <button class="tips-close-btn" id="btn-close-tips" title="Đóng">✕</button>
+          </div>
+          <div class="bb-tip-content">
+            <div class="bb-tip-item">
+              <span class="tip-icon">🎯</span>
+              <span>Rê chuột / vuốt nhẹ để khống chế đĩa, <b>vút thật nhanh</b> để smash nã đại bác xé gió!</span>
+            </div>
+            <div class="bb-tip-item">
+              <span class="tip-icon">📐</span>
+              <span>Sút đĩa nảy vào thành bàn chữ V để tạo góc sút chéo hiểm hóc làm đối thủ bất ngờ.</span>
+            </div>
+            <div class="bb-tip-item">
+              <span class="tip-icon">🛡️</span>
+              <span>Luôn giữ tay cầm ở khu vực trung lộ trước khung thành để kịp thời cản phá bóng phản xạ.</span>
+            </div>
+            <div class="bb-tip-item">
+              <span class="tip-icon">🏆</span>
+              <span>Cơ thủ nào chạm mốc <b>7 điểm</b> trước sẽ giành cúp chiến thắng chung cuộc!</span>
+            </div>
+          </div>
+          <button class="bb-pill-btn active" id="btn-tips-ok" style="justify-content: center; margin-top: 8px;">Đã Hiểu, Chiến Thôi!</button>
+        </div>
+      </div>
+
+      <!-- MODAL GIỚI THIỆU GAME -->
+      <div id="modal-about" class="tboy-modal-overlay hidden">
+        <div class="tboy-dialog">
+          <div class="tips-dialog-header">
+            <div class="tboy-dialog-title">✨ TBOY AIR HOCKEY 3D</div>
+            <button class="tips-close-btn" id="btn-close-about" title="Đóng">✕</button>
+          </div>
+          <div class="tboy-dialog-sub">Phiên bản Thể Thao Tốc Độ Cao 3D · Tboy Studio</div>
+          <div style="font-size: 13.5px; color: #475569; line-height: 1.6; text-align: left; background: #f8fafc; padding: 12px 16px; border-radius: 16px; border: 1px solid #e2e8f0; margin: 8px 0;">
+            • Đồ họa WebGL 3D mượt mà 60 FPS.<br>
+            • Vật lý va chạm đàn hồi chân thực theo lực vút chuột.<br>
+            • Solo cùng Bot AI thông minh hoặc Đấu mạng Realtime 1v1.<br>
+            • Thiết kế đồng bộ hệ sinh thái Tboy Sports 2026.
+          </div>
+          <button class="bb-pill-btn active" id="btn-close-about-ok" style="justify-content: center; margin-top: 6px;">Đóng</button>
         </div>
       </div>
     </div>

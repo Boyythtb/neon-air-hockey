@@ -463,8 +463,7 @@ function triggerGoal(scorer) {
     if (p1Score >= targetScore || p2Score >= targetScore) {
       const won = (scorer === 'p1' && myRole === 'p1') || (scorer === 'p2' && myRole === 'p2');
       showToast(won ? '🏆 CHIẾN THẮNG TUYỆT ĐỐI!' : 'THUA TRẬN NÀY RỒI! HÃY THỬ LẠI NHÉ!', won ? 'success' : 'warning', 4000);
-      resetMatch();
-      backToMenu();
+      showGameOverModal(won);
     } else {
       localPuck.x = 0;
       localPuck.z = scorer === 'p1' ? -4 : 4;
@@ -473,6 +472,23 @@ function triggerGoal(scorer) {
       isGoalScored = false;
     }
   }, 2000);
+}
+
+function showGameOverModal(won) {
+  const modalGo = document.getElementById('modal-game-over');
+  const goIcon = document.getElementById('go-icon');
+  const goTitle = document.getElementById('go-title');
+  const goSub = document.getElementById('go-sub');
+  const goP1 = document.getElementById('go-score-p1');
+  const goP2 = document.getElementById('go-score-p2');
+
+  if (goIcon) goIcon.innerText = won ? '🏆' : '🤖';
+  if (goTitle) goTitle.innerText = won ? 'CHIẾN THẮNG TUYỆT ĐỐI!' : 'ĐỐI THỦ ĐÃ THẮNG!';
+  if (goSub) goSub.innerText = won ? 'Bạn đã xuất sắc vượt qua đối thủ!' : 'Hãy rèn luyện thêm để phục thù nào!';
+  if (goP1) goP1.innerText = p1Score;
+  if (goP2) goP2.innerText = p2Score;
+
+  if (modalGo) modalGo.classList.remove('hidden');
 }
 
 function resetMatch() {
@@ -487,22 +503,37 @@ function resetMatch() {
   isGoalScored = false;
 }
 
+function enterMatchUI() {
+  document.getElementById('modal-create-room')?.classList.add('hidden');
+  document.getElementById('modal-join-room')?.classList.add('hidden');
+  document.getElementById('modal-online-menu')?.classList.add('hidden');
+  document.getElementById('modal-game-over')?.classList.add('hidden');
+  document.getElementById('main-menu')?.classList.add('hidden');
+  document.getElementById('hud')?.classList.remove('hidden');
+  document.getElementById('in-game-hint')?.classList.remove('hidden');
+  updateCameraFraming();
+}
+
 function backToMenu() {
   gameMode = 'MENU';
   myRole = 'p1';
-  document.getElementById('hud').classList.add('hidden');
-  document.getElementById('main-menu').classList.remove('hidden');
+  document.getElementById('hud')?.classList.add('hidden');
+  document.getElementById('in-game-hint')?.classList.add('hidden');
+  document.getElementById('modal-game-over')?.classList.add('hidden');
+  document.getElementById('modal-create-room')?.classList.add('hidden');
+  document.getElementById('modal-join-room')?.classList.add('hidden');
+  document.getElementById('modal-online-menu')?.classList.add('hidden');
+  document.getElementById('modal-tips')?.classList.add('hidden');
+  document.getElementById('modal-about')?.classList.add('hidden');
+  document.getElementById('main-menu')?.classList.remove('hidden');
   updateCameraFraming();
   fbMultiplayer.leaveRoom();
 }
 
 // LẮNG NGHE SỰ KIỆN TỪ FIREBASE MULTIPLAYER
 fbMultiplayer.on('game_start', (data) => {
-  document.getElementById('modal-create-room').classList.add('hidden');
-  document.getElementById('modal-join-room').classList.add('hidden');
-  document.getElementById('main-menu').classList.add('hidden');
-  document.getElementById('hud').classList.remove('hidden');
   gameMode = 'ONLINE';
+  enterMatchUI();
 
   if (data.players) {
     document.getElementById('hud-p1-name').innerText = data.players[0].name.toUpperCase();
@@ -549,21 +580,45 @@ fbMultiplayer.on('player_disconnected', () => {
 });
 
 // UI EVENTS
-document.getElementById('btn-play-ai').addEventListener('click', () => {
+document.getElementById('btn-play-ai')?.addEventListener('click', () => {
   sounds.playClick();
   gameMode = 'AI';
   myRole = 'p1';
-  updateCameraFraming();
-  document.getElementById('main-menu').classList.add('hidden');
-  document.getElementById('hud').classList.remove('hidden');
   document.getElementById('hud-p1-name').innerText = playerName.toUpperCase();
   document.getElementById('hud-p2-name').innerText = 'AI PRO';
   resetMatch();
+  enterMatchUI();
   showToast('Bắt đầu trận đấu với AI!', 'info');
 });
 
-document.getElementById('btn-open-create-room').addEventListener('click', async () => {
+// POPUP CHỌN ONLINE
+const modalOnlineMenu = document.getElementById('modal-online-menu');
+const btnMenuOnline = document.getElementById('btn-menu-online');
+const btnCloseOnlineMenu = document.getElementById('btn-close-online-menu');
+
+if (btnMenuOnline && modalOnlineMenu) {
+  btnMenuOnline.addEventListener('click', () => {
+    sounds.playClick();
+    modalOnlineMenu.classList.remove('hidden');
+  });
+}
+if (btnCloseOnlineMenu && modalOnlineMenu) {
+  btnCloseOnlineMenu.addEventListener('click', () => {
+    sounds.playClick();
+    modalOnlineMenu.classList.add('hidden');
+  });
+}
+if (modalOnlineMenu) {
+  modalOnlineMenu.addEventListener('click', (e) => {
+    if (e.target === modalOnlineMenu) {
+      modalOnlineMenu.classList.add('hidden');
+    }
+  });
+}
+
+document.getElementById('btn-open-create-room')?.addEventListener('click', async () => {
   sounds.playClick();
+  modalOnlineMenu?.classList.add('hidden');
   try {
     const res = await fbMultiplayer.createRoom(playerName);
     roomCode = res.roomCode;
@@ -577,26 +632,27 @@ document.getElementById('btn-open-create-room').addEventListener('click', async 
   }
 });
 
-document.getElementById('btn-cancel-create').addEventListener('click', () => {
+document.getElementById('btn-cancel-create')?.addEventListener('click', () => {
   sounds.playClick();
   document.getElementById('modal-create-room').classList.add('hidden');
   document.getElementById('main-menu').classList.remove('hidden');
   fbMultiplayer.leaveRoom();
 });
 
-document.getElementById('btn-open-join-room').addEventListener('click', () => {
+document.getElementById('btn-open-join-room')?.addEventListener('click', () => {
   sounds.playClick();
+  modalOnlineMenu?.classList.add('hidden');
   document.getElementById('modal-join-room').classList.remove('hidden');
   document.getElementById('main-menu').classList.add('hidden');
 });
 
-document.getElementById('btn-cancel-join').addEventListener('click', () => {
+document.getElementById('btn-cancel-join')?.addEventListener('click', () => {
   sounds.playClick();
   document.getElementById('modal-join-room').classList.add('hidden');
   document.getElementById('main-menu').classList.remove('hidden');
 });
 
-document.getElementById('btn-confirm-join').addEventListener('click', async () => {
+document.getElementById('btn-confirm-join')?.addEventListener('click', async () => {
   sounds.playClick();
   const code = document.getElementById('input-join-code').value.trim();
   if (!code) {
@@ -609,21 +665,38 @@ document.getElementById('btn-confirm-join').addEventListener('click', async () =
     myRole = 'p2';
     updateCameraFraming();
     document.getElementById('modal-join-room').classList.add('hidden');
-    document.getElementById('main-menu').classList.add('hidden');
-    document.getElementById('hud').classList.remove('hidden');
     gameMode = 'ONLINE';
+    enterMatchUI();
     showToast('Đã tham gia phòng thi đấu thành công!', 'success');
   } catch (e) {
     showToast(e.message || 'Lỗi tham gia phòng!', 'error');
   }
 });
 
-document.getElementById('btn-exit-match').addEventListener('click', () => {
+document.getElementById('btn-exit-match')?.addEventListener('click', () => {
   sounds.playClick();
   backToMenu();
 });
 
-document.getElementById('btn-change-name').addEventListener('click', () => {
+// REMATCH & VỀ TRANG CHỦ TỪ GAME OVER MODAL
+document.getElementById('btn-go-rematch')?.addEventListener('click', () => {
+  sounds.playClick();
+  document.getElementById('modal-game-over').classList.add('hidden');
+  resetMatch();
+  if (gameMode !== 'ONLINE') {
+    gameMode = 'AI';
+  }
+  enterMatchUI();
+});
+
+document.getElementById('btn-go-home')?.addEventListener('click', () => {
+  sounds.playClick();
+  resetMatch();
+  backToMenu();
+});
+
+// ĐỔI TÊN NGƯỜI CHƠI
+document.getElementById('btn-change-name')?.addEventListener('click', () => {
   sounds.playClick();
   const newName = prompt('Nhập tên cơ thủ của bạn:', playerName);
   if (newName && newName.trim()) {
@@ -633,6 +706,52 @@ document.getElementById('btn-change-name').addEventListener('click', () => {
     showToast(`Đã đổi tên thành: ${playerName}`, 'success');
   }
 });
+
+// BẬT / TẮT ÂM THANH
+const btnToggleAudio = document.getElementById('btn-toggle-audio');
+const txtAudioBtn = document.getElementById('txt-audio-btn');
+if (btnToggleAudio) {
+  btnToggleAudio.addEventListener('click', () => {
+    sounds.enabled = !sounds.enabled;
+    if (txtAudioBtn) {
+      txtAudioBtn.innerText = sounds.enabled ? '🔊 Âm Thanh: Bật' : '🔇 Âm Thanh: Tắt';
+    }
+    if (sounds.enabled) sounds.playClick();
+    showToast(sounds.enabled ? 'Đã bật âm thanh' : 'Đã tắt âm thanh', 'info');
+  });
+}
+
+// POPUP GIỚI THIỆU GAME
+const modalAbout = document.getElementById('modal-about');
+const btnBbInfo = document.getElementById('btn-bb-info');
+const btnCloseAbout = document.getElementById('btn-close-about');
+const btnCloseAboutOk = document.getElementById('btn-close-about-ok');
+
+if (btnBbInfo && modalAbout) {
+  btnBbInfo.addEventListener('click', () => {
+    sounds.playClick();
+    modalAbout.classList.remove('hidden');
+  });
+}
+if (btnCloseAbout && modalAbout) {
+  btnCloseAbout.addEventListener('click', () => {
+    sounds.playClick();
+    modalAbout.classList.add('hidden');
+  });
+}
+if (btnCloseAboutOk && modalAbout) {
+  btnCloseAboutOk.addEventListener('click', () => {
+    sounds.playClick();
+    modalAbout.classList.add('hidden');
+  });
+}
+if (modalAbout) {
+  modalAbout.addEventListener('click', (e) => {
+    if (e.target === modalAbout) {
+      modalAbout.classList.add('hidden');
+    }
+  });
+}
 
 // POPUP MẸO THI ĐẤU
 const modalTips = document.getElementById('modal-tips');
@@ -670,17 +789,32 @@ if (modalTips) {
 window.addEventListener('load', () => {
   const fill = document.getElementById('loading-bar-inner');
   const splash = document.getElementById('loading-screen');
+  const statusTxt = document.getElementById('loading-status-text');
   let p = 0;
+  const stages = [
+    { p: 25, txt: 'Đang tải đồ họa WebGL 3D...' },
+    { p: 55, txt: 'Thiết lập sân thi đấu & cảm biến...' },
+    { p: 85, txt: 'Sẵn sàng hệ thống AI & Realtime...' },
+    { p: 100, txt: 'Sẵn sàng tranh tài!' }
+  ];
+  let stageIdx = 0;
   const interval = setInterval(() => {
-    p += 25;
-    if (fill) fill.style.width = `${p}%`;
-    if (p >= 100) {
+    if (stageIdx < stages.length) {
+      const target = stages[stageIdx];
+      p = target.p;
+      if (fill) fill.style.width = `${p}%`;
+      if (statusTxt) statusTxt.innerText = target.txt;
+      stageIdx++;
+    } else {
       clearInterval(interval);
       setTimeout(() => {
-        if (splash) splash.classList.add('fade-out');
-      }, 300);
+        if (splash) {
+          splash.classList.add('fade-out');
+          setTimeout(() => splash.classList.add('hidden'), 400);
+        }
+      }, 250);
     }
-  }, 60);
+  }, 110);
 });
 
 // ANIMATION LOOP
