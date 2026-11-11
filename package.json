@@ -9,7 +9,7 @@
     "start": "node server.js",
     "build": "vite build",
     "preview": "npm run build && wrangler dev",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler pages deploy dist --project-name airhockey-3d --force"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",
