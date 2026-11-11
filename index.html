@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Tboy Air Hockey 3D · Tboy Studio</title>
+    <meta name="description" content="Tranh tài Air Hockey 3D siêu tốc đỉnh cao cùng Tboy Studio. Solo với AI Pro & Đấu mạng Realtime qua mã phòng!" />
+    <meta name="theme-color" content="#fdf2f8" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+    <!-- Apple Touch Icon (Khi thêm lên màn hình chính iPhone / iPad) -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Air Hockey 3D" />
+
+    <!-- PWA Web App Manifest (Thêm vào màn hình chính Android & Desktop) -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Open Graph / Facebook / Zalo / Messenger (Ảnh & thông tin khi share link) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Tboy Studio" />
+    <meta property="og:title" content="Tboy Air Hockey 3D · Tranh Tài Siêu Tốc 3D" />
+    <meta property="og:description" content="Tranh tài Air Hockey 3D siêu tốc đỉnh cao! Đấu đơn với AI & Thách đấu bạn bè qua mã phòng realtime!" />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter / X Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tboy Air Hockey 3D · Tranh Tài Siêu Tốc 3D" />
+    <meta name="twitter:description" content="Tranh tài Air Hockey 3D siêu tốc đỉnh cao! Đấu đơn với AI & Thách đấu bạn bè qua mã phòng realtime!" />
+    <meta name="twitter:image" content="/og-image.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+      <!-- 3D WebGL Canvas Container -->
+      <div id="canvas-container"></div>
+
+      <!-- 1. MÀN HÌNH TẢI GAME (SPLASH LOADING BIRDIE BASH STYLE) -->
+      <div id="loading-screen" class="loading-screen">
+        <div class="loading-box">
+          <span class="loading-puck-bounce">🥏</span>
+          <div class="tboy-loading-brand">
+            <span class="tboy-studio-badge">TBOY STUDIO</span>
+            <h2 class="loading-brand">Air <span>Hockey 3D</span></h2>
+          </div>
+          <div class="loading-track">
+            <div id="loading-bar-inner" class="loading-fill"></div>
+          </div>
+          <span id="loading-status-text" class="loading-txt">Đang chuẩn bị sân thi đấu...</span>
+        </div>
+      </div>
+
+      <!-- 2. GIAO DIỆN CHÍNH (MAIN MENU BIRDIE BASH STYLE) -->
+      <div id="main-menu" class="tboy-menu">
+        <!-- CỘT TRÁI -->
+        <div class="bb-left-column">
+          <div class="bb-brand-box">
+            <div class="bb-logo-group">
+              <span class="bb-logo-hockey">AIR</span>
+              <span class="bb-logo-strike">HOCKEY</span>
+            </div>
+            <span class="bb-sub-pill">🥏 Tranh Tài Đối Kháng Tốc Độ Cao 3D</span>
+          </div>
+
+          <div class="bb-menu-stack">
+            <button class="bb-pill-btn primary" id="btn-play-ai">
+              <span>🤖</span> Đấu Với Máy (AI)
+            </button>
+            <button class="bb-pill-btn cyan" id="btn-open-create-room">
+              <span>⚡</span> Tạo Phòng Online (1v1)
+            </button>
+            <button class="bb-pill-btn" id="btn-open-join-room">
+              <span>🔑</span> Vào Phòng Bằng Mã
+            </button>
+          </div>
+        </div>
+
+        <!-- TOP RIGHT BAR -->
+        <div class="bb-top-bar-right">
+          <button class="bb-signin-pill" id="btn-change-name">
+            <span class="user-icon">👤</span>
+            <span id="display-player-name">Cơ Thủ #1024</span>
+            <span style="font-size: 11px; color: #f43f5e;">✏️</span>
+          </button>
+        </div>
+
+        <!-- BẢNG MẸO THI ĐẤU (MẶC ĐỊNH THU GỌN GỌN GÀNG, BẤM VÀO MỚI MỞ RA) -->
+        <div class="bb-right-column">
+          <div class="bb-card collapsed" id="card-tips">
+            <div class="bb-card-header" id="btn-toggle-tips">
+              <div class="bb-card-title">
+                <span>💡</span> MẸO THI ĐẤU
+              </div>
+              <button class="bb-toggle-btn" id="btn-toggle-tips-icon" title="Mở rộng / Thu gọn">▸</button>
+            </div>
+            <div class="bb-tip-content" id="tips-content">
+              <div class="bb-tip-item">
+                <span>🎯</span>
+                <span>Rê chuột nhẹ để đẩy êm, <b>vụt chuột nhanh</b> để smash nã đại bác xé gió!</span>
+              </div>
+              <div class="bb-tip-item">
+                <span>📐</span>
+                <span>Đánh đĩa nảy vào thành chữ V để tạo góc sút hiểm hóc qua gôn.</span>
+              </div>
+              <div class="bb-tip-item">
+                <span>🏆</span>
+                <span>Cơ thủ nào chạm mốc <b>7 điểm</b> trước sẽ giành chiến thắng!</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. HUD MATCH SCOREBOARD CHÍNH GIỮA (SCOREBOARD CHUẨN ĐỒNG BỘ BIRDIE BASH) -->
+      <div id="hud" class="hud-top-bar hidden">
+        <div class="match-hud-pill">
+          <!-- ĐỘI BẠN (P1) -->
+          <div class="hud-player">
+            <div class="hud-avatar-box">🥏</div>
+            <div class="hud-name-col">
+              <span id="hud-p1-name" class="hud-label">BẠN</span>
+              <span class="hud-team-tag blue">P1</span>
+            </div>
+            <span id="p1-score" class="hud-score hud-score-p1">0</span>
+          </div>
+
+          <!-- KHỐI GIỮA: VS & TARGET -->
+          <div class="hud-center">
+            <span class="hud-vs">VS</span>
+            <span class="hud-target">CHẠM 7 ĐIỂM</span>
+          </div>
+
+          <!-- ĐỐI THỦ (P2) -->
+          <div class="hud-player">
+            <span id="p2-score" class="hud-score hud-score-p2">0</span>
+            <div class="hud-name-col" style="text-align: right;">
+              <span id="hud-p2-name" class="hud-label">AI PRO</span>
+              <span class="hud-team-tag red">P2</span>
+            </div>
+            <div class="hud-avatar-box">🤖</div>
+          </div>
+
+          <!-- NÚT THOÁT RA MENU -->
+          <button class="hud-exit-btn" id="btn-exit-match" title="Thoát ra Menu">✕</button>
+        </div>
+      </div>
+
+      <!-- BANNER GHI BÀN TO GIỮA MÀN HÌNH -->
+      <div id="goal-banner">
+        <span>⚽</span> GOAL!
+      </div>
+
+      <!-- 4. MODAL ONLINE LOBBY: TẠO PHÒNG -->
+      <div id="modal-create-room" class="tboy-modal-overlay hidden">
+        <div class="tboy-dialog">
+          <div class="tboy-dialog-title">TẠO PHÒNG REALTIME</div>
+          <div class="tboy-dialog-sub">Gửi mã phòng này cho bạn bè để cùng vào thi đấu:</div>
+          <div class="tboy-code-tag" id="label-room-code">----</div>
+          <div style="font-size: 13px; color: #0284c7; font-weight: 700;">Đang chờ đối thủ vào phòng...</div>
+          <button class="bb-pill-btn" id="btn-cancel-create" style="justify-content: center;">Hủy Phòng</button>
+        </div>
+      </div>
+
+      <!-- MODAL ONLINE LOBBY: VÀO PHÒNG -->
+      <div id="modal-join-room" class="tboy-modal-overlay hidden">
+        <div class="tboy-dialog">
+          <div class="tboy-dialog-title">VÀO PHÒNG THI ĐẤU</div>
+          <div class="tboy-dialog-sub">Nhập mã PIN 4 ký tự do bạn bè chia sẻ:</div>
+          <div class="tboy-input-box">
+            <label class="tboy-input-label">Mã phòng</label>
+            <input type="text" id="input-join-code" class="tboy-input" placeholder="VD: ABCD" maxlength="6" style="text-transform: uppercase; font-size: 20px; text-align: center; letter-spacing: 4px;" />
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 6px;">
+            <button class="bb-pill-btn" id="btn-cancel-join" style="flex: 1; justify-content: center;">Hủy</button>
+            <button class="bb-pill-btn primary" id="btn-confirm-join" style="flex: 1; justify-content: center;">Vào Chiến</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
